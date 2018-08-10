@@ -1,5 +1,6 @@
 package com.so.moretimer;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,61 +9,114 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Timer mTimer1;
-    private TimerTask mTask1;
     private Timer mTimer2;
+    private TimerTask mTask1;
     private TimerTask mTask2;
-    private TextView mTvTime1;
+    @SuppressLint("StaticFieldLeak")
+    private static TextView mTvTime1;
     private TextView mTvTime2;
-    private TextView mTvTime3;
-    private TextView mTvTime4;
+    @SuppressLint("StaticFieldLeak")
+    private static TextView mTvTime3;
+    @SuppressLint("StaticFieldLeak")
+    private static TextView mTvTime4;
     private TextView mTvTime5;
     private MyThread mThread;
     private MyRunnable mRunnable;
 
-    private Handler mHandler = new Handler() {
+    private static class MyHandler extends Handler {
+        private final WeakReference<MainActivity> mActivity;
+
+        private MyHandler(MainActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    mTvTime1.setText(getTime());
+            MainActivity activity = mActivity.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case 1:
+                        mTvTime1.setText(getTime());
+                        break;
+
+                    case 2: {
+                        mTvTime3.setText(getTime());
+                        this.removeMessages(2);
+                        Message message = this.obtainMessage(2);
+                        this.sendMessageDelayed(message, 1000);
+                    }
                     break;
 
-                case 2: {
-                    mTvTime3.setText(getTime());
-                    mHandler.removeMessages(2);
-                    Message message = mHandler.obtainMessage(2);
-                    mHandler.sendMessageDelayed(message, 1000);
+                    case 3:
+                        this.removeMessages(2);
+                        break;
+
+                    case 4: {
+                        mTvTime4.setText(getTime());
+                        this.removeMessages(4);
+                        Message message = this.obtainMessage(4);
+                        this.sendMessage(message);
+                    }
+                    break;
+
+                    case 5:
+                        this.removeMessages(4);
+                        break;
+                    default:
+                        break;
                 }
-                break;
-
-                case 3:
-                    mHandler.removeMessages(2);
-                    break;
-
-                case 4: {
-                    mTvTime4.setText(getTime());
-                    mHandler.removeMessages(4);
-                    Message message = mHandler.obtainMessage(4);
-                    mHandler.sendMessage(message);
-                }
-                break;
-
-                case 5:
-                    mHandler.removeMessages(4);
-                    break;
-                default:
-                    break;
             }
         }
-    };
+    }
+
+    private final MyHandler mHandler = new MyHandler(this);
+
+//    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case 1:
+//                    mTvTime1.setText(getTime());
+//                    break;
+//
+//                case 2: {
+//                    mTvTime3.setText(getTime());
+//                    mHandler.removeMessages(2);
+//                    Message message = mHandler.obtainMessage(2);
+//                    mHandler.sendMessageDelayed(message, 1000);
+//                }
+//                break;
+//
+//                case 3:
+//                    mHandler.removeMessages(2);
+//                    break;
+//
+//                case 4: {
+//                    mTvTime4.setText(getTime());
+//                    mHandler.removeMessages(4);
+//                    Message message = mHandler.obtainMessage(4);
+//                    mHandler.sendMessage(message);
+//                }
+//                break;
+//
+//                case 5:
+//                    mHandler.removeMessages(4);
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTvTime3 = (TextView) findViewById(R.id.tv_time3);
         mTvTime4 = (TextView) findViewById(R.id.tv_time4);
         mTvTime5 = (TextView) findViewById(R.id.tv_time5);
+
         CardView cvStart1 = (CardView) findViewById(R.id.cv_start1);
         CardView cvStop1 = (CardView) findViewById(R.id.cv_stop1);
         CardView cvStart2 = (CardView) findViewById(R.id.cv_start2);
@@ -109,8 +164,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *
      * @return 格式化后的时间
      */
-    private String getTime() {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+    private static String getTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
         return format.format(new Date());
     }
 
