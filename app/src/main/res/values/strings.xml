@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MoreTimer</string>
+
+    <!-- timer -->
+    <string name="timer">计时器</string>
+    <string name="add_hour">+1h</string>
+    <string name="add_min">+1m</string>
+    <string name="start">start</string>
+    <string name="stop">stop</string>
+    <string name="remain_min">-1m</string>
+    <string name="remain_hour">-1h</string>
+    <string name="version">版本不够!</string>
+    <string name="add_ten_hour">+10h</string>
+    <string name="other_timers">其他计时器</string>
+    <string name="click_start">请点击开始!</string>
+    <string name="tmp_time">00</string>
+</resources>
