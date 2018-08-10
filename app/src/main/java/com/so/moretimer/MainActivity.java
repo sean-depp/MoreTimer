@@ -81,43 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final MyHandler mHandler = new MyHandler(this);
 
-//    private Handler mHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case 1:
-//                    mTvTime1.setText(getTime());
-//                    break;
-//
-//                case 2: {
-//                    mTvTime3.setText(getTime());
-//                    mHandler.removeMessages(2);
-//                    Message message = mHandler.obtainMessage(2);
-//                    mHandler.sendMessageDelayed(message, 1000);
-//                }
-//                break;
-//
-//                case 3:
-//                    mHandler.removeMessages(2);
-//                    break;
-//
-//                case 4: {
-//                    mTvTime4.setText(getTime());
-//                    mHandler.removeMessages(4);
-//                    Message message = mHandler.obtainMessage(4);
-//                    mHandler.sendMessage(message);
-//                }
-//                break;
-//
-//                case 5:
-//                    mHandler.removeMessages(4);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
